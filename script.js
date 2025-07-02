@@ -3,6 +3,7 @@ const statusText = document.getElementById('status');
 const resetBtn = document.getElementById('resetBtn');
 const modeSelect = document.getElementById('modeSelect');
 const gameArea = document.getElementById('gameArea');
+const clickSound = document.getElementById('click-sound');
 
 let currentPlayer = 'X';
 let gameActive = true;
@@ -15,7 +16,13 @@ const winPatterns = [
   [0,4,8], [2,4,6]
 ];
 
+function playClickSound() {
+  clickSound.currentTime = 0;
+  clickSound.play();
+}
+
 function startGame(selectedMode) {
+  playClickSound();
   mode = selectedMode;
   modeSelect.classList.add('hidden');
   gameArea.classList.remove('hidden');
@@ -38,6 +45,7 @@ function handleMove(e) {
   const index = e.target.dataset.index;
   if (!gameActive || cells[index]) return;
 
+  playClickSound();
   makeMove(index, currentPlayer);
 
   if (checkWin(currentPlayer)) {
@@ -74,7 +82,7 @@ function checkWin(player) {
 }
 
 function computerMove() {
-  // 1. Win if possible
+  // 1. Try to win
   for (let i = 0; i < cells.length; i++) {
     if (!cells[i]) {
       cells[i] = 'O';
@@ -88,7 +96,7 @@ function computerMove() {
     }
   }
 
-  // 2. Block X
+  // 2. Block opponent
   for (let i = 0; i < cells.length; i++) {
     if (!cells[i]) {
       cells[i] = 'X';
@@ -125,6 +133,7 @@ function computerMove() {
 }
 
 function resetGame() {
+  playClickSound();
   currentPlayer = 'X';
   gameActive = true;
   cells = Array(9).fill(null);
